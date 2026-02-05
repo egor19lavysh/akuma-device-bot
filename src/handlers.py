@@ -1,11 +1,22 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.filters import Command
 from src.photos import PHOTOS
 from src.keyboards import get_catalog_keyboard, get_back_keyboard, interactive_keyboard
+from aiogram.fsm.context import FSMContext
 
 
 router = Router()
+
+TEXT_DESC = """
+Размер: 900х400мм
+Толщина: 3мм
+Покрытие: Speed/control
+
+Покрытие снизу резина,
+Прошитые края,
+Коврик подходит для стирки в стиральной машине
+"""
 
 @router.message(Command("catalog"))
 async def list_devices_handler(message: Message) -> None:
@@ -16,7 +27,7 @@ async def list_devices_handler(message: Message) -> None:
         reply_markup=get_catalog_keyboard())
     
 @router.callback_query(F.data.startswith("device_"))
-async def device_callback_handler(callback: CallbackQuery) -> None:
+async def device_callback_handler(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
     await callback.message.delete()
 
@@ -24,18 +35,41 @@ async def device_callback_handler(callback: CallbackQuery) -> None:
     photo_info = PHOTOS.get(device_id)
 
     if photo_info:
-        await callback.message.answer_photo(
-            photo=photo_info["file_id"],
-            caption=f"Вы выбрали коврик: {photo_info['name']}",
-            reply_markup=interactive_keyboard(device_id=device_id)
-        )
+        photo_ids = photo_info.get("ids", [])
+        
+        if photo_ids:
+            media_group = [
+                InputMediaPhoto(media=photo_id) 
+                for photo_id in photo_ids
+            ]
+            # Добавляем подпись к последней фотографии
+            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC}"
+            media_group[-1].parse_mode = "HTML"
+            
+            msg_id = await callback.message.answer_media_group(media=media_group)
+            await state.update_data(last_media_message_id=msg_id)
+            await callback.message.answer(
+                "Выберите действие:",
+                reply_markup=interactive_keyboard(device_id=device_id)
+            )
+        else:
+            await callback.message.answer("Извините, информация о выбранном коврике недоступна.", reply_markup=get_back_keyboard())
     else:
         await callback.message.answer("Извините, информация о выбранном коврике недоступна.", reply_markup=get_back_keyboard())
 
 @router.callback_query(F.data == "back_to_catalog")
-async def back_to_catalog_handler(callback: CallbackQuery) -> None:
+async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
     await callback.message.delete()
+
+    # Удаляем последнее сообщение с медиа-группой
+    last_message_id = (await state.get_data()).get("last_media_message_id")
+    if last_message_id:
+        for i in range(len(last_message_id)):
+            await callback.message.bot.delete_message(
+            chat_id=callback.message.chat.id,
+            message_id=last_message_id[i].message_id
+        )
 
     await callback.message.answer_photo(
         photo=PHOTOS[0]["file_id"],

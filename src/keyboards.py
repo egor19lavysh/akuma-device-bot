@@ -15,6 +15,7 @@ def get_catalog_keyboard() -> InlineKeyboardMarkup:
         )
         builder.add(button)
 
+    builder.adjust(2)
     return builder.as_markup()
 
 def interactive_keyboard(device_id: int) -> InlineKeyboardMarkup:
@@ -25,7 +26,7 @@ def interactive_keyboard(device_id: int) -> InlineKeyboardMarkup:
     url = f"https://t.me/{settings.SELLER}?text={encoded_text}"
 
     button1 = InlineKeyboardButton(
-        text="Купить",
+        text="Перейти к заказу",
         url=url
     )
     button2 = InlineKeyboardButton(
