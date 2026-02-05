@@ -16,6 +16,10 @@ def get_catalog_keyboard() -> InlineKeyboardMarkup:
         builder.add(button)
 
     builder.adjust(2)
+
+    ozon_button = InlineKeyboardButton(text="Ozon магазин", url="https://ozon.ru/t/p52tD2r")
+    builder.add(ozon_button)
+
     return builder.as_markup()
 
 def interactive_keyboard(device_id: int) -> InlineKeyboardMarkup:

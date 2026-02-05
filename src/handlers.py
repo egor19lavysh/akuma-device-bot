@@ -9,13 +9,14 @@ from aiogram.fsm.context import FSMContext
 router = Router()
 
 TEXT_DESC = """
+Цена: {price}₽
 Размер: 900х400мм
 Толщина: 3мм
 Покрытие: Speed/control
 
-Покрытие снизу резина,
-Прошитые края,
-Коврик подходит для стирки в стиральной машине
+1. Противоскользящее резиновое основание
+2. Аккуратно прошитые края
+3. Подходит для ручной и бережной стирки в стиральной машине
 """
 
 @router.message(Command("catalog"))
@@ -23,7 +24,8 @@ async def list_devices_handler(message: Message) -> None:
     await message.bot.send_photo(
         chat_id=message.chat.id,
         photo=PHOTOS[0]["file_id"],
-        caption="Выберите коврик:",
+        caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
+        parse_mode="HTML",
         reply_markup=get_catalog_keyboard())
     
 @router.callback_query(F.data.startswith("device_"))
@@ -43,7 +45,7 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
                 for photo_id in photo_ids
             ]
             # Добавляем подпись к последней фотографии
-            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC}"
+            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC.format(price=1900 if device_id <= 6 else 1700)}"
             media_group[-1].parse_mode = "HTML"
             
             msg_id = await callback.message.answer_media_group(media=media_group)
