@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.filters import Command
+from src.config import settings
 from src.photos import PHOTOS
 from src.keyboards import get_catalog_keyboard, get_back_keyboard, interactive_keyboard
 from aiogram.fsm.context import FSMContext
@@ -19,6 +20,17 @@ TEXT_DESC = """
 3. Подходит для ручной и бережной стирки в стиральной машине
 """
 
+TEXT_DESC_2 = """
+Цена: 2400₽
+Размер: 900х400мм
+Толщина: 4мм
+Покрытие: Speed/control
+
+1. Противоскользящее резиновое основание
+2. Аккуратно прошитые края
+3. Более 10 разных режимов подсветки
+"""
+
 @router.message(Command("catalog"))
 async def list_devices_handler(message: Message) -> None:
     await message.bot.send_photo(
@@ -28,6 +40,32 @@ async def list_devices_handler(message: Message) -> None:
         parse_mode="HTML",
         reply_markup=get_catalog_keyboard())
     
+@router.callback_query(F.data.startswith("next_page_"))
+async def next_page(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await callback.message.delete()
+
+    page = int(callback.data.split("_")[-1])
+
+    if page == 2:
+        await state.update_data(current_page=2)
+        await callback.message.bot.send_photo(
+            chat_id=callback.message.chat.id,
+            photo=PHOTOS[24]["file_id"],
+            caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
+            parse_mode="HTML",
+            reply_markup=get_catalog_keyboard(page=2))
+    else:
+        await state.update_data(current_page=1)
+        await callback.message.bot.send_photo(
+            chat_id=callback.message.chat.id,
+            photo=PHOTOS[0]["file_id"],
+            caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
+            parse_mode="HTML",
+            reply_markup=get_catalog_keyboard(page=1))
+
+
+    
 @router.callback_query(F.data.startswith("device_"))
 async def device_callback_handler(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
@@ -35,6 +73,17 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
 
     device_id = int(callback.data.split("_")[1])
     photo_info = PHOTOS.get(device_id)
+
+    if device_id <= 6:
+        price = 1900
+    elif device_id <= 14:
+        price = 1700
+    elif device_id == 15:
+        price = 1500
+    elif device_id == 16:
+        price = "от 4000"
+    elif device_id == 17:
+        price = 1700
 
     if photo_info:
         photo_ids = photo_info.get("ids", [])
@@ -45,14 +94,19 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
                 for photo_id in photo_ids
             ]
             # Добавляем подпись к последней фотографии
-            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC.format(price=1900 if device_id <= 6 else 1700)}"
+            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC.format(price=price) if device_id <= 17 else TEXT_DESC_2}"
             media_group[-1].parse_mode = "HTML"
             
             msg_id = await callback.message.answer_media_group(media=media_group)
             await state.update_data(last_media_message_id=msg_id)
+            if device_id == 16:
+                seller = "dementia_a"
+            else:
+                seller = settings.SELLER
+
             await callback.message.answer(
                 "Выберите действие:",
-                reply_markup=interactive_keyboard(device_id=device_id)
+                reply_markup=interactive_keyboard(device_id=device_id, seller=seller)
             )
         else:
             await callback.message.answer("Извините, информация о выбранном коврике недоступна.", reply_markup=get_back_keyboard())
@@ -64,6 +118,9 @@ async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) ->
     await callback.answer()
     await callback.message.delete()
 
+    data = await state.get_data()
+    current_page = data.get("current_page", 1)
+
     # Удаляем последнее сообщение с медиа-группой
     last_message_id = (await state.get_data()).get("last_media_message_id")
     if last_message_id:
@@ -73,8 +130,16 @@ async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) ->
             message_id=last_message_id[i].message_id
         )
 
-    await callback.message.answer_photo(
-        photo=PHOTOS[0]["file_id"],
-        caption="Выберите коврик:",
-        reply_markup=get_catalog_keyboard()
-    )
+    if current_page == 2:
+        await callback.message.bot.send_photo(
+            chat_id=callback.message.chat.id,
+            photo=PHOTOS[24]["file_id"],
+            caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
+            parse_mode="HTML",
+            reply_markup=get_catalog_keyboard(page=2))
+    else:
+        await callback.message.answer_photo(
+            photo=PHOTOS[0]["file_id"],
+            caption="Выберите коврик:",
+            reply_markup=get_catalog_keyboard()
+        )
