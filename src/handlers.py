@@ -76,8 +76,10 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
 
     if device_id <= 6:
         price = 1900
-    elif device_id <= 14:
+    elif device_id < 14:
         price = 1700
+    elif device_id == 14:
+        price = 1900
     elif device_id == 15:
         price = 1500
     elif device_id == 16:

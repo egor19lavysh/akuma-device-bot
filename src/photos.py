@@ -2,7 +2,8 @@ FIXED_IDS = [
     "AgACAgIAAxkBAAEBVUdpx_rtxqKw7iRzDAlZ_oDoFuz_gQACrxZrG3fyQErnQOOr6h_9OQEAAwIAA3kAAzoE",
     "AgACAgIAAxkBAAEBVUhpx_rtlVWb8LBgUUjIIQZky6JRrQACsBZrG3fyQEo41DZ1oudmHgEAAwIAA3kAAzoE",
     "AgACAgIAAxkBAAEBVUVpx_rt58Rcmahqby8BSTwclyXdSgACrRZrG3fyQEp-h7s0HDwvsgEAAwIAA3kAAzoE",
-    "AgACAgIAAxkBAAEBVUZpx_rtZqO6B9hIIXZJtXTmkQe8wAACrhZrG3fyQErcXDMDMmwLrAEAAwIAA3kAAzoE"
+    "AgACAgIAAxkBAAEBVUZpx_rtZqO6B9hIIXZJtXTmkQe8wAACrhZrG3fyQErcXDMDMmwLrAEAAwIAA3kAAzoE",
+    "AgACAgIAAxkBAAEBk2FpyquWdc534VybPZcXrnfFRhJoIwAC6xRrG-VrWEoj1Y_Vkwz7OwEAAwIAA3kAAzoE"
 ]
 
 PHOTOS = {
@@ -85,7 +86,7 @@ PHOTOS = {
                 "AgACAgIAAxkBAANWaYSCpi7W2KP4HKQQsYLN1eIFkx4AArUOaxvexCFI3w247rNHVE8BAAMCAAN5AAM4BA"]
     },
     13: {
-        "name": "Rei V1 18+",
+        "name": "Rei v1 18+",
         "ids": ["AgACAgIAAxkBAAEBVO1px_qpm7-x2f-sc9ioHauuRBuG9gAChBZrG3fyQEpVzElh1d7d3gEAAwIAA3kAAzoE",
                 "AgACAgIAAxkBAAEBVOxpx_qpC1ykdYRh63bipbBxV1JhEgAC8BVrG5IoOUr0UVcJUYgL4gEAAwIAA3kAAzoE",
                 "AgACAgIAAxkBAAEBVO5px_qp3z704srEa1L--aGyzYvyQgAChRZrG3fyQEqhwpgq5CH-8QEAAwIAA3kAAzoE"]
