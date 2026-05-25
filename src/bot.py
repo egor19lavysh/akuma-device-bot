@@ -14,6 +14,8 @@ logging.basicConfig(level=logging.INFO)
 dp = Dispatcher()
 
 
+
+
 # Command handler
 @dp.message(Command("start"))
 async def command_start_handler(message: Message) -> None:
