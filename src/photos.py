@@ -137,32 +137,32 @@ PHOTOS = {
     19: {
         "name": "Rei rgb v1 18+",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVPtpx_q0WL36zpW4DZIEJrZuZ_AFsgAChhZrG3fyQErF-ZF7RMq03AEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADDGpwXKmA7UGOKkv-hSwNWValqKo2AAJ0GGsbo-aBSwVmx_escl-fAQADAgADeQADPQQ"] + FIXED_IDS
     },
     20: {
         "name": "Rei rgb v2",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVTRpx_riiC9M09RxrI8J9rW2VBk_QgACnhZrG3fyQEpSNMwyw5QUQAEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADDmpwXLWRblVSo8FCmTJ8lHsMvEMdAAJ1GGsbo-aBS-B6y2KuowlGAQADAgADeQADPQQ"] + FIXED_IDS
     },
     21: {
         "name": "Reze rgb",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVTVpx_rigEXw-1rziUc5P3wfjqUpIAACnxZrG3fyQEpyWIUWIe10awEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADEGpwXMC2vCLCpktOhlmqgx0LFZ1YAAJ2GGsbo-aBSzCVK8uNsIYjAQADAgADeQADPQQ"] + FIXED_IDS
     },
     22: {
         "name": "Mitsuri rgb",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVOxpx_qpC1ykdYRh63bipbBxV1JhEgAC8BVrG5IoOUr0UVcJUYgL4gEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADCmpwXGhF4TQKmFng-q2BVhPYrCXAAAJzGGsbo-aBSy-ZN5oUNEWjAQADAgADeQADPQQ"] + FIXED_IDS
     },
     23: {
         "name": "Makima rgb v1",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVTZpx_ri5wV7w6LYYXfMw_XOV9-wzQAC7xVrG5IoOUrIeJx1DfZvhQEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADEmpwXNNx9DJ8ncpGEGgvaeKfOcv5AAJ3GGsbo-aBSwE2Szx_yNWGAQADAgADeQADPQQ"] + FIXED_IDS
     },
     24: {
         "name": "Makima rgb v2",
         "price": 3000,
-        "ids": ["AgACAgIAAxkBAAEBVTdpx_rilkHim4xy9GH3qKbt_q_urQACoBZrG3fyQEoQecZ8_-8HuwEAAwIAA3kAAzoE"] + FIXED_IDS
+        "ids": ["AgACAgIAAyEFAAMBA3kfkgADFGpwXRKYHX4iqeGlEBscqvOFVUNRAAJ5GGsbo-aBS4k2stOmzvtmAQADAgADeQADPQQ"] + FIXED_IDS
     },
     25: {
         'name': "all2",

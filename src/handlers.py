@@ -74,6 +74,7 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
     device_id = int(callback.data.split("_")[1])
     photo_info = PHOTOS.get(device_id)
 
+
     if photo_info:
         photo_ids = photo_info.get("ids", [])
         
