@@ -21,7 +21,7 @@ TEXT_DESC = """
 """
 
 TEXT_DESC_2 = """
-Цена: 2400₽
+Цена: 3000₽
 Размер: 900х400мм
 Толщина: 4мм
 Покрытие: Speed/control
@@ -51,7 +51,7 @@ async def next_page(callback: CallbackQuery, state: FSMContext):
         await state.update_data(current_page=2)
         await callback.message.bot.send_photo(
             chat_id=callback.message.chat.id,
-            photo=PHOTOS[24]["file_id"],
+            photo=PHOTOS[25]["file_id"],
             caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
             parse_mode="HTML",
             reply_markup=get_catalog_keyboard(page=2))
@@ -74,19 +74,6 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
     device_id = int(callback.data.split("_")[1])
     photo_info = PHOTOS.get(device_id)
 
-    if device_id <= 6:
-        price = 1900
-    elif device_id < 13:
-        price = 1700
-    elif device_id < 15:
-        price = 1900
-    elif device_id == 15:
-        price = 1500
-    elif device_id == 16:
-        price = "от 4000"
-    elif device_id == 17:
-        price = 1700
-
     if photo_info:
         photo_ids = photo_info.get("ids", [])
         
@@ -96,15 +83,13 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
                 for photo_id in photo_ids
             ]
             # Добавляем подпись к последней фотографии
-            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC.format(price=price) if device_id <= 17 else TEXT_DESC_2}"
+            media_group[-1].caption = f"<b>{photo_info['name']}</b>\n{TEXT_DESC.format(price=photo_info['price']) if device_id not in list(range(19, 25)) else TEXT_DESC_2}"
             media_group[-1].parse_mode = "HTML"
             
             msg_id = await callback.message.answer_media_group(media=media_group)
             await state.update_data(last_media_message_id=msg_id)
-            if device_id == 16:
-                seller = "dementia_a"
-            else:
-                seller = settings.SELLER
+
+            seller = settings.SELLER
 
             await callback.message.answer(
                 "Выберите действие:",
@@ -135,7 +120,7 @@ async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) ->
     if current_page == 2:
         await callback.message.bot.send_photo(
             chat_id=callback.message.chat.id,
-            photo=PHOTOS[24]["file_id"],
+            photo=PHOTOS[25]["file_id"],
             caption="Коврики доступны к <b>предзаказу</b>, а так же вы можете купить некоторые из них в нашем <b>магазине на Ozon</b>",
             parse_mode="HTML",
             reply_markup=get_catalog_keyboard(page=2))
@@ -145,3 +130,31 @@ async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) ->
             caption="Выберите коврик:",
             reply_markup=get_catalog_keyboard()
         )
+
+@router.callback_query(F.data == "custom_design")
+async def custom_design_handler(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()
+    await callback.message.delete()
+
+    photo_ids = [
+        "AgACAgIAAxkBAAEBVQRpx_q8vdGhUJyMT6m2Bke7PaiTggACrhVrG7qmMEp-6xdXDq_zUgEAAwIAA3kAAzoE",
+        "AgACAgIAAxkBAAEBVQVpx_q80RYxav8sU-UWNCeeZW8euwACjhZrG3fyQEqAue57kSpUGgEAAwIAA3kAAzoE",
+        "AgACAgIAAxkBAAEBVQdpx_q8qFhYRQOKZrm5-Fg9rqupEAACjRZrG3fyQEqW2ly5waAcTwEAAwIAA3kAAzoE",
+        "AgACAgIAAxkBAAEBVQZpx_q88DN8CwsNdXYfd22yy3KrfQACjxZrG3fyQEriLVKfAAGf8bgBAAMCAAN5AAM6BA"
+    ]
+
+    media_group = [
+                    InputMediaPhoto(media=photo_id) 
+                    for photo_id in photo_ids
+                ]
+    # Добавляем подпись к последней фотографии
+    media_group[-1].caption = f"<b>Custom Design</b>\n{TEXT_DESC.format(price="от 4000")}"
+    media_group[-1].parse_mode = "HTML"
+                
+    msg_id = await callback.message.answer_media_group(media=media_group)
+    await state.update_data(last_media_message_id=msg_id)
+
+    await callback.message.answer(
+                    "Выберите действие:",
+                    reply_markup=interactive_keyboard(device_id=-1, seller="dementia_a", device_name="Custom Design")
+                )

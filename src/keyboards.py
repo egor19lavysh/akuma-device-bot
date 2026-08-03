@@ -8,9 +8,16 @@ from src.config import settings
 def get_catalog_keyboard(page: int = 1) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
+    if page == 1:
+            next_page_button = InlineKeyboardButton(text="Следующая страница ▶️", callback_data="next_page_2")
+            builder.row(next_page_button)
+    else:
+        next_page_button = InlineKeyboardButton(text="◀️ Назад", callback_data="next_page_1")
+        builder.row(next_page_button)
+
     pages = {
         1: range(1, 13),
-        2: range(13, 24)
+        2: range(13, 25)
     }
 
     for i in pages.get(page):
@@ -25,19 +32,16 @@ def get_catalog_keyboard(page: int = 1) -> InlineKeyboardMarkup:
     ozon_button = InlineKeyboardButton(text="Ozon магазин", url="https://ozon.ru/t/p52tD2r")
     builder.row(ozon_button)
 
-    if page == 1:
-        next_page_button = InlineKeyboardButton(text="Следующая страница ▶️", callback_data="next_page_2")
-        builder.row(next_page_button)
-    else:
-        next_page_button = InlineKeyboardButton(text="◀️ Назад", callback_data="next_page_1")
-        builder.row(next_page_button)
+    custom_button = InlineKeyboardButton(text="Custom Design", callback_data="custom_design")
+    builder.row(custom_button)
 
     return builder.as_markup()
 
-def interactive_keyboard(device_id: int, seller: str = settings.SELLER) -> InlineKeyboardMarkup:
+def interactive_keyboard(device_id: int, seller: str = settings.SELLER, device_name: str = None) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    message_text = f"Привет! Я бы хотел(а) купить коврик {PHOTOS[device_id]['name']}"
+    device_name = device_name or PHOTOS[device_id]['name']
+    message_text = f"Привет! Я бы хотел(а) купить коврик {device_name}"
     encoded_text = urllib.parse.quote(message_text)
     url = f"https://t.me/{seller}?text={encoded_text}"
 
