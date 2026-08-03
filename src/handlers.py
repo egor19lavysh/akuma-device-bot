@@ -148,7 +148,7 @@ async def custom_design_handler(callback: CallbackQuery, state: FSMContext) -> N
                     for photo_id in photo_ids
                 ]
     # Добавляем подпись к последней фотографии
-    media_group[-1].caption = f"<b>Custom Design</b>\n{TEXT_DESC.format(price="от 4000")}"
+    media_group[-1].caption = f"<b>Custom Design</b>\n{TEXT_DESC.format(price='от 4000')}"
     media_group[-1].parse_mode = "HTML"
                 
     msg_id = await callback.message.answer_media_group(media=media_group)
