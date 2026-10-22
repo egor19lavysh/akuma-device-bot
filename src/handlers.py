@@ -5,6 +5,7 @@ from src.config import settings
 from src.photos import PHOTOS
 from src.keyboards import *
 from aiogram.fsm.context import FSMContext
+from aiogram.exceptions import TelegramBadRequest
 
 
 router = Router()
@@ -43,7 +44,10 @@ async def list_devices_handler(message: Message) -> None:
 @router.callback_query(F.data.startswith("next_page_"))
 async def next_page(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except TelegramBadRequest as e:
+        print(e)
 
     page = int(callback.data.split("_")[-1])
 
@@ -69,7 +73,10 @@ async def next_page(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data.startswith("device_"))
 async def device_callback_handler(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except TelegramBadRequest as e:
+        print(e)
 
     device_id = int(callback.data.split("_")[1])
     photo_info = PHOTOS.get(device_id)
@@ -104,7 +111,10 @@ async def device_callback_handler(callback: CallbackQuery, state: FSMContext) ->
 @router.callback_query(F.data == "back_to_catalog")
 async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except TelegramBadRequest as e:
+        print(e)
 
     data = await state.get_data()
     current_page = data.get("current_page", 1)
@@ -113,10 +123,14 @@ async def back_to_catalog_handler(callback: CallbackQuery, state: FSMContext) ->
     last_message_id = (await state.get_data()).get("last_media_message_id")
     if last_message_id:
         for i in range(len(last_message_id)):
-            await callback.message.bot.delete_message(
+            try:
+                await callback.message.bot.delete_message(
             chat_id=callback.message.chat.id,
             message_id=last_message_id[i].message_id
         )
+            except TelegramBadRequest as e:
+                print(e)
+                continue
 
     if current_page == 2:
         await callback.message.bot.send_photo(
