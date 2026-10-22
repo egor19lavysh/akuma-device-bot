@@ -3,7 +3,7 @@ from aiogram.types import Message, CallbackQuery, InputMediaPhoto
 from aiogram.filters import Command
 from src.config import settings
 from src.photos import PHOTOS
-from src.keyboards import get_catalog_keyboard, get_back_keyboard, interactive_keyboard
+from src.keyboards import *
 from aiogram.fsm.context import FSMContext
 
 
@@ -159,3 +159,12 @@ async def custom_design_handler(callback: CallbackQuery, state: FSMContext) -> N
                     "Выберите действие:",
                     reply_markup=interactive_keyboard(device_id=-1, seller="dementia_a", device_name="Custom Design")
                 )
+
+@router.callback_query(F.data == "to_ozon")
+async def ozon_handler(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.answer(text="Актуальные ссылки на наш магазин Ozon:",
+                                  reply_markup=ozon_kb())
+
+    
+

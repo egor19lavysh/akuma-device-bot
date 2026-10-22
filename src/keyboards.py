@@ -33,7 +33,7 @@ def get_catalog_keyboard(page: int = 1) -> InlineKeyboardMarkup:
         row = buttons[idx:idx + 2]
         kb.append(row)
 
-    ozon_button = InlineKeyboardButton(text="Ozon магазин", url="https://ozon.ru/t/p52tD2r")
+    ozon_button = InlineKeyboardButton(text="Ozon магазин", callback_data="to_ozon")
     kb.append([ozon_button])
 
 
@@ -75,3 +75,11 @@ def get_back_keyboard() -> InlineKeyboardMarkup:
     builder.add(back_button)
 
     return builder.as_markup()
+
+def ozon_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Страница 1", url="https://www.ozon.ru/product/kovrik-dlya-myshki-bolshoy-dragonball-z-android-18-lazuli-5989371132/?sh=58l7zDhTWQ")],
+        [InlineKeyboardButton(text="Страница 2", url="https://www.ozon.ru/product/kovrik-dlya-myshki-bolshoy-re-zero-emiliya-5989221022/?sh=58l7zDhTWQ")],
+        [InlineKeyboardButton(text="Страница 3", url="https://www.ozon.ru/product/kovrik-dlya-myshki-bolshoy-evangelion-ayanami-rey-18-5989221163/?sh=58l7zDhTWQ")],
+        [InlineKeyboardButton(text="Назад", callback_data="back_to_catalog")]
+    ])
